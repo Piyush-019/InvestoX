@@ -1,0 +1,87 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build outputs
+**/build/
+**/dist/
+**/.next/
+**/out/
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Testing
+**/coverage/
+**/.nyc_output/
+
+# Temporary files
+*.log
+*.tmp
+*.temp
+.cache/
+
+# System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Frontend specific
+frontend/.pnp
+frontend/.pnp.js
+frontend/coverage
+frontend/.next/
+frontend/out/
+frontend/.nuxt/
+frontend/dist/
+frontend/.cache/
+
+# Backend specific
+backend/.env
+backend/logs/
+backend/tmp/
+backend/temp/
+
+# Dashboard specific
+dashboard/.pnp
+dashboard/.pnp.js
+dashboard/coverage
+dashboard/.next/
+dashboard/out/
+dashboard/.nuxt/
+dashboard/dist/
+dashboard/.cache/
+
+# Package files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip 

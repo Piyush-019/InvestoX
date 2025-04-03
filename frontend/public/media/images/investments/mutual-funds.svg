@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100%" height="100%" fill="#f8f9fa"/>
+  <!-- Pie Chart -->
+  <g transform="translate(200, 150)">
+    <path d="M 0 -100 A 100 100 0 0 1 86.6 -50" fill="#0d6efd"/>
+    <path d="M 86.6 -50 A 100 100 0 0 1 86.6 50" fill="#28a745"/>
+    <path d="M 86.6 50 A 100 100 0 0 1 0 100" fill="#ffc107"/>
+    <path d="M 0 100 A 100 100 0 0 1 -86.6 50" fill="#dc3545"/>
+    <path d="M -86.6 50 A 100 100 0 0 1 -86.6 -50" fill="#6610f2"/>
+    <path d="M -86.6 -50 A 100 100 0 0 1 0 -100" fill="#fd7e14"/>
+  </g>
+  <!-- Legend -->
+  <g transform="translate(320, 100)">
+    <rect x="0" y="0" width="15" height="15" fill="#0d6efd"/>
+    <rect x="0" y="25" width="15" height="15" fill="#28a745"/>
+    <rect x="0" y="50" width="15" height="15" fill="#ffc107"/>
+    <rect x="0" y="75" width="15" height="15" fill="#dc3545"/>
+    <rect x="0" y="100" width="15" height="15" fill="#6610f2"/>
+    <rect x="0" y="125" width="15" height="15" fill="#fd7e14"/>
+  </g>
+</svg> 

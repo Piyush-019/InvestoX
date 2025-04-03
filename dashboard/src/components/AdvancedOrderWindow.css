@@ -1,0 +1,186 @@
+.action-window-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.action-window {
+  background-color: #1c2030;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 95%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.action-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #2a3042;
+}
+
+.action-header h3 {
+  margin: 0;
+  color: #d1d4dc;
+  font-size: 1.2rem;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #d1d4dc;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.action-body {
+  padding: 16px;
+}
+
+.order-types, .product-types {
+  display: flex;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  border: 1px solid #2a3042;
+}
+
+.order-type, .product-type {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+  background-color: #252a3a;
+  color: #d1d4dc;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.order-type:not(:last-child), .product-type:not(:last-child) {
+  border-right: 1px solid #2a3042;
+}
+
+.order-type:hover, .product-type:hover {
+  background-color: #313850;
+}
+
+.order-type.active, .product-type.active {
+  background-color: #4f6ef7;
+  color: white;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  color: #a0a3a9;
+  font-size: 0.85rem;
+}
+
+.form-group input, .form-group select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #2a3042;
+  background-color: #252a3a;
+  color: #d1d4dc;
+  font-size: 0.9rem;
+}
+
+.form-group input:focus, .form-group select:focus {
+  outline: none;
+  border-color: #4f6ef7;
+}
+
+.advanced-options {
+  margin-bottom: 16px;
+}
+
+.advanced-toggle {
+  background: none;
+  border: none;
+  color: #4f6ef7;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  margin-bottom: 16px;
+}
+
+.target-stoploss {
+  display: flex;
+  gap: 10px;
+}
+
+.target-stoploss .form-group {
+  flex: 1;
+}
+
+.order-summary {
+  background-color: #252a3a;
+  border-radius: 4px;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+.summary-item:last-child {
+  margin-bottom: 0;
+}
+
+.summary-item span:first-child {
+  color: #a0a3a9;
+}
+
+.summary-item span:last-child {
+  color: #d1d4dc;
+  font-weight: 500;
+}
+
+.action-btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.buy-btn {
+  background-color: #26a69a;
+  color: white;
+}
+
+.sell-btn {
+  background-color: #ef5350;
+  color: white;
+}
+
+.buy-btn:hover {
+  background-color: #2bbc8a;
+}
+
+.sell-btn:hover {
+  background-color: #f44336;
+} 

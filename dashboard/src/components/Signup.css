@@ -1,0 +1,102 @@
+.signup-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    margin-top: 50px;
+}
+
+.signup-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+.signup-container button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.signup-container button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.signup-container button[type="submit"]:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.google-login {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.google-login p {
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.google-login p:before,
+.google-login p:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 45%;
+    height: 1px;
+    background-color: #ccc;
+}
+
+.google-login p:before {
+    left: 0;
+}
+
+.google-login p:after {
+    right: 0;
+}
+
+.google-btn {
+    margin-top: 10px;
+}
+
+.login-link-text, .signup-link-text {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.login-link-text a, .signup-link-text a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.login-link-text a:hover, .signup-link-text a:hover {
+    text-decoration: underline;
+} 

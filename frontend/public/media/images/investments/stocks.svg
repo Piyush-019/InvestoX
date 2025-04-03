@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100%" height="100%" fill="#f8f9fa"/>
+  <!-- Stock Chart -->
+  <path d="M 50 250 L 100 200 L 150 220 L 200 150 L 250 180 L 300 120 L 350 90" 
+        stroke="#0d6efd" fill="none" stroke-width="3"/>
+  <!-- Candlesticks -->
+  <g fill="#28a745">
+    <rect x="80" y="160" width="10" height="30"/>
+    <rect x="130" y="180" width="10" height="40"/>
+    <rect x="180" y="130" width="10" height="20"/>
+    <rect x="230" y="150" width="10" height="25"/>
+    <rect x="280" y="100" width="10" height="15"/>
+  </g>
+  <!-- Grid Lines -->
+  <g stroke="#dee2e6" stroke-width="1">
+    <line x1="50" y1="50" x2="350" y2="50"/>
+    <line x1="50" y1="100" x2="350" y2="100"/>
+    <line x1="50" y1="150" x2="350" y2="150"/>
+    <line x1="50" y1="200" x2="350" y2="200"/>
+    <line x1="50" y1="250" x2="350" y2="250"/>
+  </g>
+  <!-- Y-axis -->
+  <line x1="50" y1="50" x2="50" y2="250" stroke="#212529" stroke-width="2"/>
+  <!-- X-axis -->
+  <line x1="50" y1="250" x2="350" y2="250" stroke="#212529" stroke-width="2"/>
+</svg> 
