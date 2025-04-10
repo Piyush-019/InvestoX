@@ -236,12 +236,13 @@ const Signup = () => {
                         {loading ? 'Processing...' : 'Continue'}
                     </button>
                 </form>
-                <div className="google-login">
+                <div className="google-signup">
                     <p>or</p>
-                    <GoogleOAuthProvider clientId="75683887402-bsknno3j3ji80ras2sp00b9ndh1jhteo.apps.googleusercontent.com">
+                    <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
                         <GoogleLogin
                             onSuccess={handleGoogleSuccess}
                             onError={() => setError('Google Login Failed')}
+                            text="signup_with"
                             className="google-btn"
                         />
                     </GoogleOAuthProvider>
