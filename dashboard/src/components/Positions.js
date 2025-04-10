@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, useCallback } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import GeneralContext from "./GeneralContext";
+import "./Positions.css"; // Import the CSS file
 
 const Positions = () => {
   const { user } = useContext(GeneralContext);
@@ -54,7 +55,7 @@ const Positions = () => {
 
   if (!user) {
     return (
-      <div className="positions">
+      <div className="positions-container">
         <div className="no-positions">
           <p>Please log in to view your positions</p>
           <Link to="/login" className="btn">
@@ -67,7 +68,7 @@ const Positions = () => {
 
   if (loading && positions.length === 0) {
     return (
-      <div className="positions">
+      <div className="positions-container">
         <div className="no-positions">
           <p>Loading positions...</p>
         </div>
@@ -77,7 +78,7 @@ const Positions = () => {
 
   if (error) {
     return (
-      <div className="positions">
+      <div className="positions-container">
         <div className="no-positions">
           <p>{error}</p>
         </div>
@@ -86,62 +87,61 @@ const Positions = () => {
   }
 
   return (
-    <>
-      <h3 className="title">
-        Positions ({positions.length})
-        <button 
-          onClick={fetchPositions} 
-          className="refresh-btn"
-          style={{ 
-            border: "none", 
-            background: "transparent", 
-            cursor: "pointer", 
-            marginLeft: "10px",
-            fontSize: "14px",
-            color: "#666" 
-          }}
-        >
-          ↻ Refresh
-        </button>
-      </h3>
+    <div className="positions-container">
+      <h2>Positions ({positions.length})</h2>
 
       {positions.length > 0 ? (
-        <div className="order-table">
-          <table>
-            <thead>
-              <tr>
-                <th>Product</th>
-                <th>Instrument</th>
-                <th>Qty.</th>
-                <th>Avg.</th>
-                <th>LTP</th>
-                <th>P&L</th>
-                <th>Chg.</th>
-              </tr>
-            </thead>
-            <tbody>
-              {positions.map((stock, index) => {
-                const curValue = stock.price * stock.qty;
-                const isProfit = curValue - stock.avg * stock.qty >= 0.0;
-                const profClass = isProfit ? "profit" : "loss";
-                const dayClass = stock.isLoss ? "loss" : "profit";
+        <div className="positions-content">
+          <div className="positions-list">
+            <table className="positions-table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Instrument</th>
+                  <th>Qty.</th>
+                  <th>Avg.</th>
+                  <th>LTP</th>
+                  <th>P&L</th>
+                  <th>Chg.</th>
+                </tr>
+              </thead>
+              <tbody>
+                {positions.map((stock, index) => {
+                  const curValue = stock.price * stock.qty;
+                  const avgValue = stock.avg * stock.qty;
+                  const absProfitLoss = curValue - avgValue;
+                  
+                  // Use the backend flags when available, fallback to calculated values if not
+                  const isProfit = stock.hasOwnProperty('isLoss') ? !stock.isLoss : absProfitLoss >= 0;
+                  const isDayProfit = stock.hasOwnProperty('isDayLoss') ? !stock.isDayLoss : !stock.day.startsWith('-');
+                  
+                  const rowClass = isProfit ? "profit-row" : "loss-row";
 
-                return (
-                  <tr key={index}>
-                    <td>{stock.product}</td>
-                    <td>{stock.name}</td>
-                    <td>{stock.qty}</td>
-                    <td>{stock.avg.toFixed(2)}</td>
-                    <td>{stock.price.toFixed(2)}</td>
-                    <td className={profClass}>
-                      {(curValue - stock.avg * stock.qty).toFixed(2)}
-                    </td>
-                    <td className={dayClass}>{stock.day}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                  return (
+                    <tr key={index} className={rowClass}>
+                      <td>{stock.product}</td>
+                      <td>{stock.name}</td>
+                      <td>{stock.qty}</td>
+                      <td>{stock.avg.toFixed(2)}</td>
+                      <td>{stock.price.toFixed(2)}</td>
+                      <td className={isProfit ? "profit" : "loss"}>
+                        {absProfitLoss.toFixed(2)}
+                      </td>
+                      <td className={isDayProfit ? "profit" : "loss"}>{stock.day}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+            <div className="refresh-section">
+              <button onClick={fetchPositions} className="btn">
+                ↻ Refresh
+              </button>
+              <span className="last-updated">
+                Last updated: {new Date(lastUpdated).toLocaleTimeString()}
+              </span>
+            </div>
+          </div>
         </div>
       ) : (
         <div className="no-positions">
@@ -151,7 +151,7 @@ const Positions = () => {
           </Link>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

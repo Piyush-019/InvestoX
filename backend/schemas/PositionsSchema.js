@@ -14,6 +14,7 @@ const PositionsSchema = new Schema({
   net: String,
   day: String,
   isLoss: Boolean,
+  isDayLoss: Boolean,
   createdAt: {
     type: Date,
     default: Date.now

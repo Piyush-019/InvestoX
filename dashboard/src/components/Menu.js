@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import GeneralContext from "./GeneralContext";
+import "./admin/AdminStyles.css"; // Import admin styles
 
 const Menu = () => {
   const [selectedMenu, setSelectedMenu] = useState(0);
@@ -9,6 +10,13 @@ const Menu = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const profileDropdownRef = useRef(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // Check if user is admin
+  useEffect(() => {
+    const adminToken = localStorage.getItem('adminToken');
+    setIsAdmin(!!adminToken || user?.isAdmin);
+  }, [user]);
 
   // Set active menu based on current location
   React.useEffect(() => {
@@ -18,6 +26,7 @@ const Menu = () => {
     else if (path === '/holdings') setSelectedMenu(2);
     else if (path === '/positions') setSelectedMenu(3);
     else if (path === '/funds') setSelectedMenu(4);
+    else if (path.startsWith('/admin')) setSelectedMenu(5);
   }, [location]);
 
   // Handle click outside to close dropdown
@@ -58,6 +67,10 @@ const Menu = () => {
     // Clear user data from localStorage
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    
+    // Also clear admin data if exists
+    localStorage.removeItem('adminToken');
+    localStorage.removeItem('adminInfo');
     
     // Update user context
     setUser(null);
@@ -129,13 +142,28 @@ const Menu = () => {
               </p>
             </Link>
           </li>
+          
+          {/* Admin link */}
+          {isAdmin && (
+            <li>
+              <Link
+                style={{ textDecoration: "none" }}
+                to="/admin"
+                onClick={() => handleMenuClick(5)}
+              >
+                <p className={`${selectedMenu === 5 ? activeMenuClass : menuClass} menu-admin-link`}>
+                  Admin
+                </p>
+              </Link>
+            </li>
+          )}
         </ul>
         <hr />
         {user ? (
           <div className="profile-section" ref={profileDropdownRef}>
             <div className="profile" onClick={handleProfileClick}>
               <div className="avatar">{getInitial()}</div>
-              <p className="username">{user.username}</p>
+              <p className="username">{user.username} {isAdmin && <span className="menu-admin-badge">Admin</span>}</p>
             </div>
             {isProfileDropdownOpen && (
               <div className="profile-dropdown">

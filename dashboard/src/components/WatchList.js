@@ -1,5 +1,6 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import GeneralContext from "./GeneralContext";
+import axios from "axios";
 
 import { Tooltip, Grow, Menu, MenuItem } from "@mui/material";
 
@@ -13,12 +14,51 @@ import {
   CalculateOutlined
 } from "@mui/icons-material";
 
-import { watchlist } from "../data/data";
+import { watchlist as staticWatchlist } from "../data/data";
 import { DoughnutChart } from "./DoughnoutChart";
 
-const labels = watchlist.map((subArray) => subArray["name"]);
-
 const WatchList = () => {
+  const [watchlist, setWatchlist] = useState(staticWatchlist);
+  
+  // Handle refreshing of watchlist data
+  useEffect(() => {
+    // Initial fetch of watchlist data
+    fetchWatchlistData();
+    
+    // Setup listener for stock price updates
+    const handleStockPriceUpdate = () => {
+      fetchWatchlistData();
+    };
+    
+    // Add event listener for stock price updates
+    window.addEventListener('stockPriceUpdated', handleStockPriceUpdate);
+    
+    // Cleanup listener on unmount
+    return () => {
+      window.removeEventListener('stockPriceUpdated', handleStockPriceUpdate);
+    };
+  }, []);
+  
+  // Function to fetch current watchlist data
+  const fetchWatchlistData = async () => {
+    try {
+      // Try to fetch from backend first
+      const response = await axios.get('http://localhost:5000/stock/watchlist');
+      if (response.data && Array.isArray(response.data) && response.data.length > 0) {
+        setWatchlist(response.data);
+      } else {
+        // Fallback to static data
+        setWatchlist(staticWatchlist);
+      }
+    } catch (error) {
+      console.log('Failed to fetch watchlist data, using static data');
+      setWatchlist(staticWatchlist);
+    }
+  };
+  
+  // Prepare data for chart
+  const labels = watchlist.map((stock) => stock.name);
+  
   const data = {
     labels,
     datasets: [
@@ -46,33 +86,6 @@ const WatchList = () => {
     ],
   };
 
-  // export const data = {
-  //   labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-  // datasets: [
-  //   {
-  //     label: "# of Votes",
-  //     data: [12, 19, 3, 5, 2, 3],
-  //     backgroundColor: [
-  //       "rgba(255, 99, 132, 0.2)",
-  //       "rgba(54, 162, 235, 0.2)",
-  //       "rgba(255, 206, 86, 0.2)",
-  //       "rgba(75, 192, 192, 0.2)",
-  //       "rgba(153, 102, 255, 0.2)",
-  //       "rgba(255, 159, 64, 0.2)",
-  //     ],
-  //     borderColor: [
-  //       "rgba(255, 99, 132, 1)",
-  //       "rgba(54, 162, 235, 1)",
-  //       "rgba(255, 206, 86, 1)",
-  //       "rgba(75, 192, 192, 1)",
-  //       "rgba(153, 102, 255, 1)",
-  //       "rgba(255, 159, 64, 1)",
-  //     ],
-  //     borderWidth: 1,
-  //   },
-  // ],
-  // };
-
   return (
     <div className="watchlist-container">
       <div className="search-container">
@@ -80,10 +93,10 @@ const WatchList = () => {
           type="text"
           name="search"
           id="search"
-          placeholder="Search eg:infy, bse, nifty fut weekly, gold mcx"
+          // placeholder="Search eg:infy, bse, nifty fut weekly, gold mcx"
           className="search"
         />
-        <span className="counts"> {watchlist.length} / 50</span>
+        {/* <span className="counts"> {watchlist.length} / 50</span> */}
       </div>
 
       <ul className="list">
@@ -121,7 +134,7 @@ const WatchListItem = ({ stock }) => {
           ) : (
             <KeyboardArrowUp className="down" />
           )}
-          <span className="price">{stock.price}</span>
+          <span className="price">{stock.price.toFixed(2)}</span>
         </div>
       </div>
       {showWatchlistActions && <WatchListActions uid={stock.name} />}
@@ -150,14 +163,6 @@ const WatchListActions = ({ uid }) => {
   const handleAdvancedSellClick = () => {
     generalContext.openAdvancedOrderWindow(uid, 'sell');
     handleMenuClose();
-  };
-  
-  const handleChartClick = () => {
-    generalContext.openStockChart(uid);
-  };
-  
-  const handleMarketDepthClick = () => {
-    generalContext.openMarketDepth(uid);
   };
   
   const handleMarginCalcClick = () => {
@@ -194,62 +199,6 @@ const WatchListActions = ({ uid }) => {
         >
           <button className="sell">Sell</button>
         </Tooltip>
-        <Tooltip
-          title="Chart (C)"
-          placement="top"
-          arrow
-          TransitionComponent={Grow}
-          onClick={handleChartClick}
-        >
-          <button className="action">
-            <ShowChartOutlined className="icon" />
-          </button>
-        </Tooltip>
-        <Tooltip
-          title="Market Depth (D)"
-          placement="top"
-          arrow
-          TransitionComponent={Grow}
-          onClick={handleMarketDepthClick}
-        >
-          <button className="action">
-            <LayersOutlined className="icon" />
-          </button>
-        </Tooltip>
-        <Tooltip title="More" placement="top" arrow TransitionComponent={Grow}>
-          <button className="action" onClick={handleMoreClick}>
-            <MoreHoriz className="icon" />
-          </button>
-        </Tooltip>
-        
-        <Menu
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleMenuClose}
-          PaperProps={{
-            sx: {
-              backgroundColor: '#252a3a',
-              color: '#d1d4dc',
-              border: '1px solid #2a3042',
-              '& .MuiMenuItem-root:hover': {
-                backgroundColor: '#313850',
-              },
-            },
-          }}
-        >
-          <MenuItem onClick={handleAdvancedBuyClick}>
-            <TrendingUpOutlined sx={{ mr: 1, color: '#4CAF50' }} />
-            Advanced Buy
-          </MenuItem>
-          <MenuItem onClick={handleAdvancedSellClick}>
-            <TrendingUpOutlined sx={{ mr: 1, color: '#F44336' }} />
-            Advanced Sell
-          </MenuItem>
-          <MenuItem onClick={handleMarginCalcClick}>
-            <CalculateOutlined sx={{ mr: 1 }} />
-            Margin Calculator
-          </MenuItem>
-        </Menu>
       </span>
     </span>
   );

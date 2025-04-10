@@ -8,37 +8,38 @@ function Awards() {
           <img src="media/images/largestBroker.svg" alt="Innovation award" />
         </div>
         <div className="col-6 p-5 mt-5">
-          <h1>Introducing the next generation investment platform</h1>
+          <h1>Introducing the next generation Investment Learning platform</h1>
+          <br/>
           <p className="mb-5">
-            InvestoX is launching with a mission to revolutionize how you invest. Our innovative platform offers everything you need to start your investment journey:
+            InvestoX is launching with a mission to revolutionize by giving people a real time experience in investing. Our innovative platform offers everything you need to start your investment experience journey:
           </p>
           <div className="row">
-            <div className="col-6">
-              <ul>
-                <li>
-                  <p>Easy stock and ETF trading</p>
-                </li>
-                <li>
-                  <p>Simplified futures and options</p>
-                </li>
-                <li>
-                  <p>Secure cryptocurrency access</p>
-                </li>
-              </ul>
-            </div>
-            <div className="col-6">
-              <ul>
-                <li>
-                  <p>Exclusive IPO opportunities</p>
-                </li>
-                <li>
-                  <p>Zero-commission mutual funds</p>
-                </li>
-                <li>
-                  <p>Diverse fixed income options</p>
-                </li>
-              </ul>
-            </div>
+                {/* <div className="col-6">
+                  <ul>
+                    <li>
+                      <p>Easy stock and ETF trading</p>
+                    </li>
+                    <li>
+                      <p>Simplified futures and options</p>
+                    </li>
+                    <li>
+                      <p>Secure cryptocurrency access</p>
+                    </li>
+                  </ul>
+                </div>
+                <div className="col-6">
+                  <ul>
+                    <li>
+                      <p>Exclusive IPO opportunities</p>
+                    </li>
+                    <li>
+                      <p>Zero-commission mutual funds</p>
+                    </li>
+                    <li>
+                      <p>Diverse fixed income options</p>
+                    </li>
+                  </ul>
+                </div> */}
           </div>
         </div>
       </div>

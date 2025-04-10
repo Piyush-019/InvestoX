@@ -10,11 +10,7 @@ function PricingPage() {
       <LeftSection
         imageURL="media/images/image.png"
         productName="Tan"
-        productDesription="Our ultra-fast flagship trading platform with streaming market data, advanced charts, an elegant UI, and more. Enjoy the Kite experience seamlessly on your Android and iOS devices."
-        tryDemo="http://localhost:3001"
-        learnMore=""
-        googlePlay=""
-        appStore=""
+        productDesription="Our ultra-fast flagship trading Learning platform with streaming market data, an elegant UI, and more. Enjoy the Tan  experience seamlessly."
       />
               <div className="text-center py-5">
           <h2 className="mb-4">Open an InvestoX Account</h2>

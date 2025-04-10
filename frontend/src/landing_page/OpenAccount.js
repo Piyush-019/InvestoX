@@ -6,8 +6,7 @@ function OpenAccount() {
       <div className="row text-center">
         <h1 className="mt-5">Open a InvestoX account</h1>
         <p>
-          Modern platforms and apps, ₹0 investments, and flat ₹20 intraday and
-          F&O trades.
+        Online platform to get real time experience in investing in stocks, derivatives, mutual funds, and more
         </p>
         <a href="http://localhost:3001/signup">
           <button

@@ -6,22 +6,13 @@ import Orders from "./Orders";
 import Positions from "./Positions";
 import Summary from "./Summary";
 import WatchList from "./WatchList";
-import ChartComponent from "./ChartComponent";
-import MarketDepth from "./MarketDepth";
 import MarginCalculator from "./MarginCalculator";
 import Signup from "./Signup";
 import Login from "./Login";
 import GeneralContext from "./GeneralContext";
-import "./ChartComponent.css";
-import "./MarketDepth.css";
 
 const Dashboard = () => {
   const { 
-    showChart, 
-    closeStockChart, 
-    activeSymbol, 
-    showMarketDepth, 
-    closeMarketDepth,
     showMarginCalculator,
     toggleMarginCalculator
   } = useContext(GeneralContext);
@@ -30,26 +21,6 @@ const Dashboard = () => {
     <div className="dashboard-container">
       <WatchList />
       <div className="content">
-        {showChart && (
-          <div className="chart-overlay">
-            <div className="chart-overlay-header">
-              <h3>Advanced Charts</h3>
-              <button className="close-btn" onClick={closeStockChart}>×</button>
-            </div>
-            <ChartComponent symbol={activeSymbol} />
-          </div>
-        )}
-        
-        {showMarketDepth && (
-          <div className="depth-overlay">
-            <div className="depth-overlay-header">
-              <h3>Market Depth</h3>
-              <button className="close-btn" onClick={closeMarketDepth}>×</button>
-            </div>
-            <MarketDepth symbol={activeSymbol} />
-          </div>
-        )}
-        
         {showMarginCalculator && (
           <div className="calculator-overlay">
             <div className="calculator-overlay-header">

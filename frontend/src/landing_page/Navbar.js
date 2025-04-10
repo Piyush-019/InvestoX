@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [username, setUsername] = useState('');
 
   useEffect(() => {
@@ -14,6 +15,12 @@ function Navbar() {
       const user = JSON.parse(userData);
       setUsername(user.username);
     }
+    
+    // Check if user is admin
+    const adminToken = localStorage.getItem('adminToken');
+    if (adminToken) {
+      setIsAdmin(true);
+    }
   }, []);
 
   const handleLogout = () => {
@@ -24,6 +31,18 @@ function Navbar() {
     // Update state
     setIsLoggedIn(false);
     setUsername('');
+    
+    // Redirect to home page
+    window.location.href = '/';
+  };
+  
+  const handleAdminLogout = () => {
+    // Clear admin data from localStorage
+    localStorage.removeItem('adminToken');
+    localStorage.removeItem('adminInfo');
+    
+    // Update state
+    setIsAdmin(false);
     
     // Redirect to home page
     window.location.href = '/';
@@ -64,6 +83,13 @@ function Navbar() {
                 </a>
               )}
             </li>
+            {isAdmin && (
+              <li className="nav-item">
+                <a className="nav-link bg-warning text-dark rounded-pill px-3 mx-1" href="/admin/dashboard">
+                  Admin
+                </a>
+              </li>
+            )}
             <li className="nav-item">
               <a className="nav-link" href="/about">
                 About
@@ -79,7 +105,7 @@ function Navbar() {
                 Investments
               </a>
             </li>
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <a className="nav-link" href="/pricing">
                 Pricing
               </a>
@@ -88,7 +114,7 @@ function Navbar() {
               <a className="nav-link" href="/support">
                 Support
               </a>
-            </li>
+            </li> */}
             {isLoggedIn && (
               <>
                 <li className="nav-item">
@@ -105,6 +131,16 @@ function Navbar() {
                   </button>
                 </li>
               </>
+            )}
+            {isAdmin && !isLoggedIn && (
+              <li className="nav-item">
+                <button 
+                  className="btn btn-outline-danger ms-2"
+                  onClick={handleAdminLogout}
+                >
+                  Admin Logout
+                </button>
+              </li>
             )}
           </ul>
         </div>

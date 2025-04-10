@@ -32,6 +32,10 @@ const Login = () => {
         try {
             setLoading(true);
             
+            // Clear any existing admin data to prevent conflicts
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminInfo');
+            
             // Send login data to backend
             const response = await axios.post('http://localhost:5000/login', {
                 email: formData.email,
@@ -40,10 +44,17 @@ const Login = () => {
             
             // Store token and user data in localStorage
             localStorage.setItem('token', response.data.token);
-            localStorage.setItem('user', JSON.stringify(response.data.user));
+            
+            // Add isAdmin: false explicitly to prevent confusion
+            const userData = {
+                ...response.data.user,
+                isAdmin: false // Explicitly set this user as not an admin
+            };
+            
+            localStorage.setItem('user', JSON.stringify(userData));
             
             // Update user context
-            setUser(response.data.user);
+            setUser(userData);
             
             // Navigate to dashboard
             navigate('/');
@@ -59,6 +70,10 @@ const Login = () => {
         try {
             setLoading(true);
             
+            // Clear any existing admin data to prevent conflicts
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminInfo');
+            
             // Decode the credential to get user info
             const decoded = decodeJwtResponse(response.credential);
             
@@ -71,10 +86,17 @@ const Login = () => {
             
             // Store token and user data in localStorage
             localStorage.setItem('token', backendResponse.data.token);
-            localStorage.setItem('user', JSON.stringify(backendResponse.data.user));
+            
+            // Add isAdmin: false explicitly to prevent confusion
+            const userData = {
+                ...backendResponse.data.user,
+                isAdmin: false // Explicitly set this user as not an admin
+            };
+            
+            localStorage.setItem('user', JSON.stringify(userData));
             
             // Update user context
-            setUser(backendResponse.data.user);
+            setUser(userData);
             
             // Navigate to dashboard
             navigate('/');
@@ -143,6 +165,9 @@ const Login = () => {
                         className="google-btn"
                     />
                 </GoogleOAuthProvider>
+            </div>
+            <div className="login-admin-link">
+                <Link to="/admin/login">Admin Login</Link>
             </div>
             <div className="signup-link-text">
                 <p>Don't have an account? <Link to="/signup">Sign Up</Link></p>

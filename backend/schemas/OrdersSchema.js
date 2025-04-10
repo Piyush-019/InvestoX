@@ -10,6 +10,15 @@ const OrdersSchema = new Schema({
   qty: Number,
   price: Number,
   mode: String,
+  status: {
+    type: String,
+    enum: ['open', 'executed'],
+    default: 'open'
+  },
+  executedAt: {
+    type: Date,
+    default: null
+  },
   createdAt: {
     type: Date,
     default: Date.now

@@ -99,4 +99,168 @@
 
 .login-link-text a:hover, .signup-link-text a:hover {
     text-decoration: underline;
+}
+
+.login-admin-link {
+    margin: 1rem 0;
+    text-align: center;
+    font-size: 0.8rem;
+}
+
+.login-admin-link a {
+    color: #999;
+    text-decoration: none;
+}
+
+.login-admin-link a:hover {
+    text-decoration: underline;
+    color: #666;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    gap: 20px;
+}
+
+.back-button {
+    background-color: transparent;
+    color: #007bff;
+    border: 1px solid #007bff;
+    border-radius: 5px;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    min-width: 100px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.back-button:hover {
+    background-color: rgba(0, 123, 255, 0.08);
+    transform: translateY(-2px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.back-button:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+small {
+    font-size: 0.8rem;
+    color: #777;
+    display: block;
+    margin-top: 5px;
+}
+
+/* New styles for phone input with India flag */
+.phone-input-container {
+    display: flex;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: white;
+    overflow: hidden;
+}
+
+.country-code-flag {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    background-color: #f9f9f9;
+    border-right: 1px solid #ddd;
+    min-width: 80px;
+}
+
+.flag-icon {
+    margin-right: 5px;
+    position: relative;
+    width: 20px;
+    height: 15px;
+}
+
+.flag-top {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.orange-band, .white-band, .green-band {
+    height: 33.33%;
+    width: 100%;
+}
+
+.orange-band {
+    background-color: #FF9933;
+}
+
+.white-band {
+    background-color: #FFFFFF;
+    position: relative;
+}
+
+.white-band:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: #000080;
+}
+
+.green-band {
+    background-color: #138808;
+}
+
+.country-code-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.phone-number-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    color: #333;
+}
+
+.phone-number-input::placeholder {
+    color: #aaa;
+}
+
+.primary-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.primary-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.primary-button:disabled {
+    background-color: #cccccc;
+    transform: none;
+    box-shadow: none;
+    cursor: not-allowed;
 } 

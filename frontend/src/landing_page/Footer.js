@@ -17,14 +17,14 @@ function Footer() {
             <br />
             <a href="/product">Products</a>
             <br />
-            <a href="/pricing">Pricing</a>
-            <br />
+            {/* <a href="/pricing">Pricing</a> */}
+            {/* <br /> */}
             <a href="/investments">Investments</a>
             <br />
-            <a href="/careers">Careers</a>
-            <br />
+            {/* <a href="/careers">Careers</a>
+            <br /> */}
           </div>
-          <div className="col">
+          {/* <div className="col">
             <p>Support</p>
             <a href="/support">Contact</a>
             <br />
@@ -32,13 +32,13 @@ function Footer() {
             <br />
             <a href="/charges">List of charges</a>
             <br />
-          </div>
+          </div> */}
           <div className="col">
             <p>Account</p>
             <a href="/signup">Open an account</a>
             <br />
-            <a href="/fund-transfer">Fund transfer</a>
-            <br />
+            {/* <a href="/fund-transfer">Fund transfer</a>
+            <br /> */}
           </div>
         </div>
         <div className="mt-5 text-muted" style={{ fontSize: "14px" }}>

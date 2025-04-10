@@ -587,19 +587,12 @@ hr {
   justify-content: space-around;
 }
 
-.nifty {
-  flex-basis: 40%;
+.nifty, .sensex {
+  flex-basis: 48%;
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
-  z-index: -2;
-}
-
-.sensex {
-  flex-basis: 40%;
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
+  justify-content: flex-start;
+  z-index: 1;
 }
 
 .nifty > *,
@@ -613,18 +606,28 @@ hr {
   text-transform: uppercase;
   color: rgb(97, 97, 97);
   white-space: nowrap;
+  min-width: 70px;
 }
 
 .index-points {
   font-size: 0.8rem;
   font-weight: 500;
-  color: rgb(223, 73, 73);
+  color: rgb(97, 97, 97);
 }
 
 .percent {
   font-size: 0.8rem;
-  font-weight: 400;
-  color: rgb(146, 146, 146);
+  font-weight: 500;
+  min-width: 50px;
+  text-align: right;
+}
+
+.positive-change {
+  color: rgb(72, 194, 55);
+}
+
+.negative-change {
+  color: rgb(223, 73, 73);
 }
 
 /* sudo selectors */
@@ -1060,6 +1063,35 @@ hr {
 .logout-button:hover {
   background-color: #dc3545;
   color: white;
+}
+
+/* Add loading container styles at the end of the file */
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 18px;
+  color: #333;
+  background-color: #f8f9fa;
+}
+
+.loading-container::after {
+  content: "";
+  width: 20px;
+  height: 20px;
+  margin-left: 15px;
+  border: 3px solid #007bff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: loading-spinner 1s linear infinite;
+}
+
+@keyframes loading-spinner {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 

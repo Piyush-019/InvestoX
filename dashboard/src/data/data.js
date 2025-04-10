@@ -1,5 +1,17 @@
 export const watchlist = [
   {
+    name: "NIFTY50",
+    price: 22567.75,
+    percent: "+0.53%",
+    isDown: false,
+  },
+  {
+    name: "SENSEX",
+    price: 74339.44,
+    percent: "+0.48%",
+    isDown: false,
+  },
+  {
     name: "INFY",
     price: 1555.45,
     percent: "-1.60%",

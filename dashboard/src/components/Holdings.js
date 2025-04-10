@@ -3,6 +3,7 @@ import axios from "axios";
 import { VerticalGraph } from "./VerticalGraph";
 import GeneralContext from "./GeneralContext";
 import { Link } from "react-router-dom";
+import "./Holdings.css"; // Import the CSS file
 
 // import { holdings } from "../data/data";
 
@@ -57,7 +58,7 @@ const Holdings = () => {
 
   if (!user) {
     return (
-      <div className="holdings">
+      <div className="holdings-container">
         <div className="no-holdings">
           <p>Please log in to view your holdings</p>
           <Link to="/login" className="btn">
@@ -70,7 +71,7 @@ const Holdings = () => {
 
   if (loading && allHoldings.length === 0) {
     return (
-      <div className="holdings">
+      <div className="holdings-container">
         <div className="no-holdings">
           <p>Loading holdings...</p>
         </div>
@@ -80,7 +81,7 @@ const Holdings = () => {
 
   if (error) {
     return (
-      <div className="holdings">
+      <div className="holdings-container">
         <div className="no-holdings">
           <p>{error}</p>
         </div>
@@ -125,29 +126,13 @@ const Holdings = () => {
   // };
 
   return (
-    <>
-      <h3 className="title">
-        Holdings ({allHoldings.length})
-        <button 
-          onClick={fetchHoldings} 
-          className="refresh-btn"
-          style={{ 
-            border: "none", 
-            background: "transparent", 
-            cursor: "pointer", 
-            marginLeft: "10px",
-            fontSize: "14px",
-            color: "#666"
-          }}
-        >
-          ↻ Refresh
-        </button>
-      </h3>
+    <div className="holdings-container">
+      <h2>Holdings ({allHoldings.length})</h2>
 
       {allHoldings.length > 0 ? (
-        <>
-          <div className="order-table">
-            <table>
+        <div className="holdings-content">
+          <div className="holdings-list">
+            <table className="holdings-table">
               <thead>
                 <tr>
                   <th>Instrument</th>
@@ -164,48 +149,57 @@ const Holdings = () => {
                 {allHoldings.map((stock, index) => {
                   const curValue = stock.price * stock.qty;
                   const isProfit = curValue - stock.avg * stock.qty >= 0.0;
-                  const profClass = isProfit ? "profit" : "loss";
-                  const dayClass = stock.isLoss ? "loss" : "profit";
+                  const dayProfit = !stock.isLoss;
+                  const rowClass = isProfit ? "profit-row" : "loss-row";
 
                   return (
-                    <tr key={index}>
+                    <tr key={index} className={rowClass}>
                       <td>{stock.name}</td>
                       <td>{stock.qty}</td>
                       <td>{stock.avg.toFixed(2)}</td>
                       <td>{stock.price.toFixed(2)}</td>
                       <td>{curValue.toFixed(2)}</td>
-                      <td className={profClass}>
+                      <td className={isProfit ? "profit" : "loss"}>
                         {(curValue - stock.avg * stock.qty).toFixed(2)}
                       </td>
-                      <td className={profClass}>{stock.net}</td>
-                      <td className={dayClass}>{stock.day}</td>
+                      <td className={isProfit ? "profit" : "loss"}>{stock.net}</td>
+                      <td className={dayProfit ? "profit" : "loss"}>{stock.day}</td>
                     </tr>
                   );
                 })}
               </tbody>
             </table>
+            <div className="refresh-section">
+              <button onClick={fetchHoldings} className="btn">
+                ↻ Refresh
+              </button>
+              <span className="last-updated">
+                Last updated: {new Date(lastUpdated).toLocaleTimeString()}
+              </span>
+            </div>
           </div>
 
-          <div className="row">
-            <div className="col">
-              <h5>
-                {totalInvestment.toFixed(2)}
-              </h5>
+          <div className="summary-section">
+            <div className="summary-item">
+              <h5>₹ {totalInvestment.toFixed(2)}</h5>
               <p>Total investment</p>
             </div>
-            <div className="col">
-              <h5>
-                {currentValue.toFixed(2)}
-              </h5>
+            <div className="summary-item">
+              <h5>₹ {currentValue.toFixed(2)}</h5>
               <p>Current value</p>
             </div>
-            <div className="col">
-              <h5>{profitLoss.toFixed(2)} ({profitLossPercentage > 0 ? '+' : ''}{profitLossPercentage.toFixed(2)}%)</h5>
+            <div className="summary-item">
+              <h5 className={profitLoss >= 0 ? "profit" : "loss"}>
+                ₹ {profitLoss.toFixed(2)} ({profitLossPercentage > 0 ? '+' : ''}{profitLossPercentage.toFixed(2)}%)
+              </h5>
               <p>P&L</p>
             </div>
           </div>
-          <VerticalGraph data={data} />
-        </>
+          
+          <div className="graph-section">
+            <VerticalGraph data={data} />
+          </div>
+        </div>
       ) : (
         <div className="no-holdings">
           <p>You don't have any holdings</p>
@@ -214,7 +208,7 @@ const Holdings = () => {
           </Link>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
