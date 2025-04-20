@@ -19,6 +19,8 @@ import { DoughnutChart } from "./DoughnoutChart";
 
 const WatchList = () => {
   const [watchlist, setWatchlist] = useState(staticWatchlist);
+  const [previousPrices, setPreviousPrices] = useState({});
+  const [lastUpdated, setLastUpdated] = useState(new Date());
   
   // Handle refreshing of watchlist data
   useEffect(() => {
@@ -26,34 +28,124 @@ const WatchList = () => {
     fetchWatchlistData();
     
     // Setup listener for stock price updates
-    const handleStockPriceUpdate = () => {
-      fetchWatchlistData();
+    const handleStockPriceUpdate = (event) => {
+      console.log('Stock price update detected, refreshing watchlist...');
+      
+      // Check if event has detail data for immediate update
+      if (event.detail) {
+        const { symbol, name, price, dayChange } = event.detail;
+        console.log(`Immediate update for ${symbol}: ${price} (${dayChange})`);
+        
+        // Update specific stock immediately instead of full refresh
+        setWatchlist(currentWatchlist => {
+          return currentWatchlist.map(stock => {
+            if (stock.name === symbol || stock.name === name) {
+              // Save the previous price before updating
+              setPreviousPrices(prev => ({
+                ...prev,
+                [stock.name]: stock.price
+              }));
+              
+              // Return updated stock
+              return {
+                ...stock,
+                price: price,
+                percent: dayChange,
+                isDown: dayChange && dayChange.startsWith('-')
+              };
+            }
+            return stock;
+          });
+        });
+      } else {
+        // Full refresh if no detail provided
+        fetchWatchlistData();
+      }
+      
+      setLastUpdated(new Date());
     };
     
     // Add event listener for stock price updates
     window.addEventListener('stockPriceUpdated', handleStockPriceUpdate);
     
-    // Cleanup listener on unmount
+    // Setup automatic refresh every 30 seconds
+    const refreshInterval = setInterval(() => {
+      fetchWatchlistData();
+      setLastUpdated(new Date());
+    }, 30000);
+    
+    // Cleanup listener and interval on unmount
     return () => {
       window.removeEventListener('stockPriceUpdated', handleStockPriceUpdate);
+      clearInterval(refreshInterval);
     };
   }, []);
   
   // Function to fetch current watchlist data
   const fetchWatchlistData = async () => {
     try {
-      // Try to fetch from backend first
-      const response = await axios.get('http://localhost:5000/stock/watchlist');
-      if (response.data && Array.isArray(response.data) && response.data.length > 0) {
-        setWatchlist(response.data);
+      // Try to fetch from real-time endpoint first
+      const response = await axios.get('http://localhost:5000/api/watchlist/realtime');
+      if (response.data && response.data.data && Array.isArray(response.data.data) && response.data.data.length > 0) {
+        // Update previous prices before setting new watchlist
+        const newPreviousPrices = { ...previousPrices };
+        response.data.data.forEach(stock => {
+          if (!newPreviousPrices[stock.name]) {
+            newPreviousPrices[stock.name] = stock.price;
+          }
+        });
+        setPreviousPrices(newPreviousPrices);
+        setWatchlist(response.data.data);
+        return;
+      }
+      
+      // Fallback to regular watchlist endpoint
+      const fallbackResponse = await axios.get('http://localhost:5000/stock/watchlist');
+      if (fallbackResponse.data && Array.isArray(fallbackResponse.data) && fallbackResponse.data.length > 0) {
+        // Update previous prices before setting new watchlist
+        const newPreviousPrices = { ...previousPrices };
+        fallbackResponse.data.forEach(stock => {
+          if (!newPreviousPrices[stock.name]) {
+            newPreviousPrices[stock.name] = stock.price;
+          }
+        });
+        setPreviousPrices(newPreviousPrices);
+        setWatchlist(fallbackResponse.data);
       } else {
-        // Fallback to static data
+        // Fallback to static data if both endpoints fail
         setWatchlist(staticWatchlist);
       }
     } catch (error) {
-      console.log('Failed to fetch watchlist data, using static data');
+      console.log('Failed to fetch watchlist data, using static data:', error);
+      
+      try {
+        // Try the normal endpoint as a fallback
+        const fallbackResponse = await axios.get('http://localhost:5000/stock/watchlist');
+        if (fallbackResponse.data && Array.isArray(fallbackResponse.data) && fallbackResponse.data.length > 0) {
+          setPreviousPrices(prevPrices => {
+            const newPrices = { ...prevPrices };
+            fallbackResponse.data.forEach(stock => {
+              if (!newPrices[stock.name]) {
+                newPrices[stock.name] = stock.price;
+              }
+            });
+            return newPrices;
+          });
+          setWatchlist(fallbackResponse.data);
+          return;
+        }
+      } catch (fallbackError) {
+        console.log('All endpoints failed, using static data');
+      }
+      
       setWatchlist(staticWatchlist);
     }
+  };
+  
+  // Function to manually refresh watchlist data
+  const handleRefresh = () => {
+    fetchWatchlistData();
+    setLastUpdated(new Date());
   };
   
   // Prepare data for chart
@@ -96,12 +188,20 @@ const WatchList = () => {
           // placeholder="Search eg:infy, bse, nifty fut weekly, gold mcx"
           className="search"
         />
-        {/* <span className="counts"> {watchlist.length} / 50</span> */}
+        <span className="update-info" onClick={handleRefresh} title="Click to refresh">
+          Last updated: {lastUpdated.toLocaleTimeString()}
+        </span>
       </div>
 
       <ul className="list">
         {watchlist.map((stock, index) => {
-          return <WatchListItem stock={stock} key={index} />;
+          return (
+            <WatchListItem 
+              stock={stock} 
+              key={index}
+              previousPrice={previousPrices[stock.name] || stock.price}
+            />
+          );
         })}
       </ul>
 
@@ -112,8 +212,22 @@ const WatchList = () => {
 
 export default WatchList;
 
-const WatchListItem = ({ stock }) => {
+const WatchListItem = ({ stock, previousPrice }) => {
   const [showWatchlistActions, setShowWatchlistActions] = useState(false);
+  const [isUpdated, setIsUpdated] = useState(false);
+
+  // When stock price changes, trigger the highlight animation
+  useEffect(() => {
+    // Only highlight when it's not the initial render
+    if (previousPrice && stock.price !== previousPrice) {
+      setIsUpdated(true);
+      // Remove the highlight class after animation completes
+      const timer = setTimeout(() => {
+        setIsUpdated(false);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [stock.price, previousPrice]);
 
   const handleMouseEnter = (e) => {
     setShowWatchlistActions(true);
@@ -123,18 +237,33 @@ const WatchListItem = ({ stock }) => {
     setShowWatchlistActions(false);
   };
 
+  // Calculate price change using previous price
+  const priceChange = stock.price - previousPrice;
+  const priceChangeFormatted = priceChange.toFixed(2);
+
   return (
-    <li onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+    <li 
+      onMouseEnter={handleMouseEnter} 
+      onMouseLeave={handleMouseLeave}
+      className={isUpdated ? 'stock-updated' : ''}
+    >
       <div className="item">
         <p className={stock.isDown ? "down" : "up"}>{stock.name}</p>
         <div className="itemInfo">
-          <span className="percent">{stock.percent}</span>
+          <span className={`percent ${stock.isDown ? "down" : "up"}`}>
+            {stock.percent}
+          </span>
           {stock.isDown ? (
             <KeyboardArrowDown className="down" />
           ) : (
-            <KeyboardArrowUp className="down" />
+            <KeyboardArrowUp className="up" />
           )}
-          <span className="price">{stock.price.toFixed(2)}</span>
+          <span className={`price ${stock.isDown ? "down" : "up"}`}>
+            {stock.price.toFixed(2)}
+            <span className="price-change">
+              ({priceChangeFormatted >= 0 ? '+' : ''}{priceChangeFormatted})
+            </span>
+          </span>
         </div>
       </div>
       {showWatchlistActions && <WatchListActions uid={stock.name} />}

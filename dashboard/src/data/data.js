@@ -1,5 +1,53 @@
 export const watchlist = [
   {
+    name: "BHARTIARTL",
+    price: 1324.50,
+    percent: "+2.99%",
+    isDown: false,
+  },
+  {
+    name: "HDFCBANK",
+    price: 1522.35,
+    percent: "+0.11%",
+    isDown: false,
+  },
+  {
+    name: "HINDUNILVR",
+    price: 2417.40,
+    percent: "+0.21%",
+    isDown: false,
+  },
+  {
+    name: "ITC",
+    price: 207.90,
+    percent: "+0.80%",
+    isDown: false,
+  },
+  {
+    name: "SBIN",
+    price: 430.20,
+    percent: "-0.34%",
+    isDown: true,
+  },
+  {
+    name: "TATAPOWER",
+    price: 124.15,
+    percent: "-0.24%",
+    isDown: true,
+  },
+  {
+    name: "EVEREADY",
+    price: 312.35,
+    percent: "-1.24%",
+    isDown: true,
+  },
+  {
+    name: "JUBLFOOD",
+    price: 3082.65,
+    percent: "-1.35%",
+    isDown: true,
+  },
+  {
     name: "NIFTY50",
     price: 22567.75,
     percent: "+0.53%",
@@ -32,7 +80,7 @@ export const watchlist = [
   {
     name: "KPITTECH",
     price: 266.45,
-    percent: "3.54%",
+    percent: "+3.54%",
     isDown: false,
   },
   {
@@ -44,7 +92,7 @@ export const watchlist = [
   {
     name: "WIPRO",
     price: 577.75,
-    percent: "0.32%",
+    percent: "+0.32%",
     isDown: false,
   },
   {
@@ -56,13 +104,13 @@ export const watchlist = [
   {
     name: "RELIANCE",
     price: 2112.4,
-    percent: "1.44%",
+    percent: "+1.44%",
     isDown: false,
   },
   {
     name: "HUL",
     price: 512.4,
-    percent: "1.04%",
+    percent: "+1.04%",
     isDown: false,
   },
 ];
@@ -72,9 +120,9 @@ export const holdings = [
   {
     name: "BHARTIARTL",
     qty: 2,
-    avg: 538.05,
-    price: 541.15,
-    net: "+0.58%",
+    avg: 1287.50,
+    price: 1324.50,
+    net: "+2.87%",
     day: "+2.99%",
   },
   {
@@ -89,7 +137,7 @@ export const holdings = [
     name: "HINDUNILVR",
     qty: 1,
     avg: 2335.85,
-    price: 2417.4,
+    price: 2417.40,
     net: "+3.49%",
     day: "+0.21%",
   },
@@ -106,7 +154,7 @@ export const holdings = [
     name: "ITC",
     qty: 5,
     avg: 202.0,
-    price: 207.9,
+    price: 207.90,
     net: "+2.92%",
     day: "+0.80%",
   },
@@ -139,7 +187,7 @@ export const holdings = [
     name: "SBIN",
     qty: 4,
     avg: 324.35,
-    price: 430.2,
+    price: 430.20,
     net: "+32.63%",
     day: "-0.34%",
     isLoss: true,
@@ -188,7 +236,7 @@ export const positions = [
     qty: 2,
     avg: 316.27,
     price: 312.35,
-    net: "+0.58%",
+    net: "-1.24%",
     day: "-1.24%",
     isLoss: true,
   },
@@ -198,7 +246,7 @@ export const positions = [
     qty: 1,
     avg: 3124.75,
     price: 3082.65,
-    net: "+10.04%",
+    net: "-1.35%",
     day: "-1.35%",
     isLoss: true,
   },

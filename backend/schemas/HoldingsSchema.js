@@ -4,7 +4,7 @@ const HoldingsSchema = new Schema({
   userId: {
     type: Schema.Types.ObjectId,
     ref: 'user',
-    required: true
+    required: false
   },
   name: String,
   qty: Number,
@@ -13,6 +13,10 @@ const HoldingsSchema = new Schema({
   net: String,
   day: String,
   isLoss: Boolean,
+  isDemo: {
+    type: Boolean,
+    default: false
+  },
   createdAt: {
     type: Date,
     default: Date.now

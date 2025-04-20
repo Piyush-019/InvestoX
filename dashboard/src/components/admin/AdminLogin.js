@@ -81,7 +81,7 @@ const AdminLogin = () => {
     <div className="admin-login-container">
       <div className="admin-login-card">
         <div className="admin-login-logo">
-          <img src="/media/images/logo.png" alt="InvestoX Logo" />
+          <img src="/logo.png" alt="InvestoX Logo" />
           <h2>Admin Panel</h2>
         </div>
         

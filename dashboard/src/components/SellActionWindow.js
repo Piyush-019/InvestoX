@@ -86,7 +86,8 @@ const SellActionWindow = ({ stockUID, onClose }) => {
         qty: stockQuantity,
         price: priceToUse,
         mode: "SELL",
-        product: productType
+        product: productType,
+        executeImmediately
       });
       
       // Check if the order was executed or just placed

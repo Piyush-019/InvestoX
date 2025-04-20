@@ -237,7 +237,7 @@ const Signup = () => {
                     </button>
                 </form>
                 <div className="google-signup">
-                    <p>or</p>
+                    <p style={{ textAlign: 'center' }}>or</p>
                     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
                         <GoogleLogin
                             onSuccess={handleGoogleSuccess}

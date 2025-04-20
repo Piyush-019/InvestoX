@@ -6,11 +6,9 @@ const PhoneVerification = ({ onVerificationComplete, onBack, userData }) => {
     const [step, setStep] = useState(1); // 1: Enter phone, 2: Enter OTP
     const [countryCode, setCountryCode] = useState('+91'); // Default to India
     const [phoneNumber, setPhoneNumber] = useState('');
-    const [otp, setOtp] = useState('');
-    const [serviceId, setServiceId] = useState('');
+    const [otpCode, setOtpCode] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [tempToken, setTempToken] = useState('');
 
     const handlePhoneNumberChange = (e) => {
         setPhoneNumber(e.target.value);
@@ -18,7 +16,7 @@ const PhoneVerification = ({ onVerificationComplete, onBack, userData }) => {
     };
 
     const handleOtpChange = (e) => {
-        setOtp(e.target.value);
+        setOtpCode(e.target.value);
         setError('');
     };
 
@@ -40,12 +38,7 @@ const PhoneVerification = ({ onVerificationComplete, onBack, userData }) => {
                 phoneNumber: fullPhoneNumber
             });
             
-            if (response.data.success) {
-                setServiceId(response.data.serviceId);
-                setStep(2); // Move to OTP verification step
-            } else {
-                setError(response.data.message || 'Failed to send OTP');
-            }
+            setStep(2); // Move to OTP verification step
         } catch (error) {
             console.error('Send OTP error:', error);
             setError(error.response?.data?.message || 'Failed to send OTP');
@@ -57,7 +50,7 @@ const PhoneVerification = ({ onVerificationComplete, onBack, userData }) => {
     const handleVerifyOtp = async (e) => {
         e.preventDefault();
         
-        if (!otp) {
+        if (!otpCode) {
             setError('Please enter the OTP');
             return;
         }
@@ -71,28 +64,17 @@ const PhoneVerification = ({ onVerificationComplete, onBack, userData }) => {
             // Verify the OTP
             const response = await axios.post('http://localhost:5000/verify-otp', {
                 phoneNumber: fullPhoneNumber,
-                otp,
-                serviceId
+                otpCode
             });
             
-            if (response.data.success) {
-                // Store phone number for registration
-                const storeResponse = await axios.post('http://localhost:5000/store-phone', {
-                    phoneNumber: fullPhoneNumber,
-                    username: userData.username,
-                    email: userData.email
-                });
-                
-                if (storeResponse.data.success) {
-                    setTempToken(storeResponse.data.tempToken);
-                    // Call the callback with phone number and temp token
-                    onVerificationComplete(fullPhoneNumber, storeResponse.data.tempToken);
-                } else {
-                    setError('Failed to store phone number');
-                }
-            } else {
-                setError(response.data.message || 'Invalid OTP');
-            }
+            // Store phone number for registration
+            const storeResponse = await axios.post('http://localhost:5000/store-phone', {
+                phoneNumber: fullPhoneNumber,
+                tempToken: response.data.tempToken
+            });
+            
+            // Call the callback with phone number and temp token
+            onVerificationComplete(fullPhoneNumber, storeResponse.data.tempToken);
         } catch (error) {
             console.error('Verify OTP error:', error);
             setError(error.response?.data?.message || 'Failed to verify OTP');
@@ -162,7 +144,7 @@ const PhoneVerification = ({ onVerificationComplete, onBack, userData }) => {
                         type="text"
                         id="otp"
                         name="otp"
-                        value={otp}
+                        value={otpCode}
                         onChange={handleOtpChange}
                         placeholder="Enter OTP sent to your phone"
                         required

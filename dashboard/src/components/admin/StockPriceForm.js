@@ -6,8 +6,7 @@ const StockPriceForm = ({ stock, onSave, onCancel }) => {
   const [formData, setFormData] = useState({
     symbol: '',
     name: '',
-    price: '',
-    dayChange: '+0.00%'
+    price: ''
   });
   const [error, setError] = useState('');
   const [holdingsData, setHoldingsData] = useState(null);
@@ -23,8 +22,7 @@ const StockPriceForm = ({ stock, onSave, onCancel }) => {
       setFormData({
         symbol: stock.symbol || '',
         name: stock.name || '',
-        price: stock.price || 0,
-        dayChange: stock.dayChange || '+0.00%'
+        price: stock.price || 0
       });
       
       // Fetch holdings data for this stock
@@ -123,6 +121,23 @@ const StockPriceForm = ({ stock, onSave, onCancel }) => {
     };
     
     console.log('Submitting stock data:', processedData);
+    
+    // Calculate day change percentage to pass along with the event
+    let dayChangePercent = '';
+    if (stock && stock.price) {
+      const percentChange = ((numericPrice - stock.price) / stock.price) * 100;
+      dayChangePercent = (percentChange >= 0 ? '+' : '') + percentChange.toFixed(2) + '%';
+    }
+    
+    // Broadcast stock price updated event with additional data
+    window.dispatchEvent(new CustomEvent('stockPriceUpdated', { 
+      detail: {
+        symbol: processedData.symbol,
+        name: processedData.name,
+        price: numericPrice,
+        dayChange: dayChangePercent
+      }
+    }));
     
     // Save the stock with properly formatted price
     onSave(processedData);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import GeneralContext from '../GeneralContext';
@@ -8,6 +8,54 @@ import './AdminStyles.css';
 
 // List of required stocks
 const REQUIRED_STOCKS = [
+  {
+    symbol: "BHARTIARTL",
+    name: "Bharti Airtel Ltd.",
+    price: 1324.50,
+    dayChange: "+2.99%"
+  },
+  {
+    symbol: "HDFCBANK",
+    name: "HDFC Bank Ltd.",
+    price: 1522.35,
+    dayChange: "+0.11%"
+  },
+  {
+    symbol: "HINDUNILVR",
+    name: "Hindustan Unilever Ltd.",
+    price: 2417.40,
+    dayChange: "+0.21%"
+  },
+  {
+    symbol: "ITC",
+    name: "ITC Ltd.",
+    price: 207.90,
+    dayChange: "+0.80%"
+  },
+  {
+    symbol: "SBIN",
+    name: "State Bank of India",
+    price: 430.20,
+    dayChange: "-0.34%"
+  },
+  {
+    symbol: "TATAPOWER",
+    name: "Tata Power Co. Ltd.",
+    price: 124.15,
+    dayChange: "-0.24%"
+  },
+  {
+    symbol: "EVEREADY",
+    name: "Eveready Industries India Ltd.",
+    price: 312.35,
+    dayChange: "-1.24%"
+  },
+  {
+    symbol: "JUBLFOOD",
+    name: "Jubilant FoodWorks Ltd.",
+    price: 3082.65,
+    dayChange: "-1.35%"
+  },
   {
     symbol: "NIFTY50",
     name: "Nifty 50 Index",
@@ -88,26 +136,7 @@ const AdminDashboard = () => {
   const { user } = useContext(GeneralContext);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Check if admin is logged in
-    const adminInfo = localStorage.getItem('adminInfo');
-    if (!adminInfo && !user?.isAdmin) {
-      navigate('/admin/login');
-      return;
-    }
-
-    // Fetch stocks
-    fetchStocks();
-
-    // Clean up on unmount
-    return () => {
-      if (refreshInterval) {
-        clearInterval(refreshInterval);
-      }
-    };
-  }, [navigate, user]);
-
-  const fetchStocks = async () => {
+  const fetchStocks = useCallback(async () => {
     try {
       setLoading(true);
       // Fetch both from backend and from holdings for demo purposes
@@ -119,7 +148,7 @@ const AdminDashboard = () => {
       } catch (err) {
         console.log('No stocks in backend, fetching from holdings');
       }
-      
+
       // If no stocks in backend, fetch holdings as stocks for demo
       if (stockData.length === 0) {
         const holdingsResponse = await axios.get('http://localhost:5000/allHoldings');
@@ -144,9 +173,27 @@ const AdminDashboard = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  // Ensure all required stocks exist
+  useEffect(() => {
+    // Check if admin is logged in
+    const adminInfo = localStorage.getItem('adminInfo');
+    if (!adminInfo && !user?.isAdmin) {
+      navigate('/admin/login');
+      return;
+    }
+
+    // Fetch stocks
+    fetchStocks();
+
+    // Clean up on unmount
+    return () => {
+      if (refreshInterval) {
+        clearInterval(refreshInterval);
+      }
+    };
+  }, [navigate, user, fetchStocks, refreshInterval]);
+
   const ensureRequiredStocksExist = async (existingStocks) => {
     try {
       // Create a set of existing stock symbols
@@ -211,11 +258,6 @@ const AdminDashboard = () => {
     navigate('/admin/login');
   };
 
-  const handleAddClick = () => {
-    setCurrentStock(null);
-    setShowForm(true);
-  };
-
   const handleEditClick = (stock) => {
     setCurrentStock(stock);
     setShowForm(true);
@@ -234,14 +276,24 @@ const AdminDashboard = () => {
       setError('');
       setSuccessMessage(`Updating ${symbol} price...`);
       
-      console.log("Attempting to update stock price", { symbol, name, price });
+      // Find the current stock to get previous price
+      const currentStock = stocks.find(s => (s.symbol || s.name) === symbol);
+      const previousPrice = currentStock?.price || price;
+      
+      // Calculate day change percentage
+      const priceChange = price - previousPrice;
+      const dayChangePercentage = ((priceChange / previousPrice) * 100).toFixed(2);
+      const dayChange = `${priceChange >= 0 ? '+' : ''}${dayChangePercentage}%`;
+      
+      console.log("Attempting to update stock price", { symbol, name, price, dayChange });
       
       // Use our new centralized endpoint to update the stock price
       try {
         const updateResponse = await axios.post('http://localhost:5000/updateStockPrice', {
           symbol,
           name: name || symbol,
-          price
+          price,
+          dayChange
         });
         console.log("Stock price update response:", updateResponse.data);
       } catch (err) {
@@ -253,7 +305,8 @@ const AdminDashboard = () => {
       try {
         const localDataResponse = await axios.post('http://localhost:5000/updateLocalData', {
           symbol,
-          price
+          price,
+          dayChange
         });
         console.log("Local data update response:", localDataResponse.data);
       } catch (err) {
@@ -267,11 +320,18 @@ const AdminDashboard = () => {
       setCurrentStock(null);
       
       // Dispatch a global event for other components to refresh
-      window.dispatchEvent(new CustomEvent('stockPriceUpdated'));
+      window.dispatchEvent(new CustomEvent('stockPriceUpdated', {
+        detail: {
+          symbol,
+          name: symbol,
+          price,
+          dayChange
+        }
+      }));
       
       // Show success message
       setError('');
-      setSuccessMessage(`Successfully updated ${symbol} price to ₹${price}`);
+      setSuccessMessage(`Successfully updated ${symbol} price to ₹${price} (${dayChange})`);
       
       // Clear success message after 3 seconds
       setTimeout(() => {
@@ -315,7 +375,7 @@ const AdminDashboard = () => {
       <header className="admin-header">
         <div className="admin-header-content">
           <div className="admin-header-left">
-            <img src="/media/images/logo.png" alt="InvestoX Logo" className="admin-logo" />
+            <img src="/logo.png" alt="InvestoX Logo" className="admin-logo" />
             <h1>Admin Dashboard</h1>
           </div>
           <div className="admin-header-right">
@@ -335,9 +395,6 @@ const AdminDashboard = () => {
           <ul className="admin-nav">
             <li className="admin-nav-item active">
               <a href="#stocks">Stock Prices</a>
-            </li>
-            <li className="admin-nav-item">
-              <a href="#dashboard" onClick={() => navigate('/')}>Main Dashboard</a>
             </li>
           </ul>
 
@@ -380,12 +437,6 @@ const AdminDashboard = () => {
                 className={`admin-button ${liveUpdatesEnabled ? 'admin-button-danger' : 'admin-button-secondary'}`}
               >
                 {liveUpdatesEnabled ? 'Disable Live Updates' : 'Enable Live Updates'}
-              </button>
-              <button
-                onClick={handleAddClick}
-                className="admin-button admin-button-primary"
-              >
-                Add New Stock
               </button>
             </div>
           </div>
@@ -440,4 +491,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard; 
+export default AdminDashboard;
